@@ -2,7 +2,6 @@ package com.quickblox.ui.kit.chatmessage.adapter.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.LayoutRes;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +10,8 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+
+import androidx.annotation.LayoutRes;
 
 import com.quickblox.ui.kit.chatmessage.adapter.R;
 

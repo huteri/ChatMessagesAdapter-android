@@ -9,7 +9,6 @@ import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
@@ -228,10 +227,6 @@ public class SingleMediaManager implements MediaManager, Player.EventListener {
         }
     }
 
-    @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest) {
-
-    }
 
     @Override
     public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
@@ -250,16 +245,6 @@ public class SingleMediaManager implements MediaManager, Player.EventListener {
 
     @Override
     public void onRepeatModeChanged(int repeatMode) {
-
-    }
-
-    @Override
-    public void onPlayerError(ExoPlaybackException error) {
-        notifyListenersOnPlayerError(error);
-    }
-
-    @Override
-    public void onPositionDiscontinuity() {
 
     }
 

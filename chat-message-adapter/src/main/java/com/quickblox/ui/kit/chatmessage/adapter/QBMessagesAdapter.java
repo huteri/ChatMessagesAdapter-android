@@ -4,10 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseIntArray;
@@ -17,6 +13,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.IdRes;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -400,6 +401,15 @@ public class QBMessagesAdapter<T extends QBChatMessage> extends RecyclerView.Ada
             displayAvatarImage(avatarUrl, holder.avatar);
         }
 
+        processLinksIfPossible(holder, chatMessage, position, isLeftMessage);
+    }
+
+    protected void processLinksIfPossible(TextMessageHolder holder, T chatMessage, int position, boolean isLeftMessage) {
+        if (TextUtils.isEmpty(chatMessage.getBody())){
+            holder.messageTextView.setMaxWidth(context.getResources().getDisplayMetrics().widthPixels);
+            return;
+        }
+
         final List<String> urlsList = LinkUtils.extractUrls(chatMessage.getBody());
         if (!urlsList.isEmpty()) {
             holder.messageTextView.setMaxWidth((int) context.getResources().getDimension(R.dimen.link_preview_width));
@@ -575,7 +585,13 @@ public class QBMessagesAdapter<T extends QBChatMessage> extends RecyclerView.Ada
     @Override
     public void add(T item) {
         chatMessages.add(item);
-        notifyDataSetChanged();
+        this.notifyItemInserted(chatMessages.size() - 1);
+    }
+
+    @Override
+    public void addToList(List<T> items) {
+        chatMessages.addAll(0, items);
+        notifyItemRangeInserted(0, items.size());
     }
 
     @Override
@@ -649,7 +665,7 @@ public class QBMessagesAdapter<T extends QBChatMessage> extends RecyclerView.Ada
 
 
     protected Uri getUriFromAttach(QBAttachment attachment) {
-        return Utils.getUriFromAttachPublicUrl(attachment);
+        return Utils.getUriFromAttachPrivateUrl(attachment);
     }
 
     protected int getDurationFromAttach(QBAttachment attachment, int position) {

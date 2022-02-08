@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
     defaultConfig {
         applicationId "com.quickblox.sample.chatadapter"
         minSdkVersion rootProject.minSdkVersion
@@ -23,9 +22,15 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:24.2.1'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation "com.quickblox:quickblox-android-sdk-chat:$rootProject.qbSdkVersion"
+    implementation "com.quickblox:quickblox-android-sdk-extensions:$rootProject.qbSdkVersion"
+    implementation "com.quickblox:quickblox-android-sdk-content:$rootProject.qbSdkVersion"
 
-    compile "com.quickblox:quickblox-android-sdk-extensions:$rootProject.qbSdkVersion"
-    compile 'io.reactivex:rxandroid:1.1.0'
-    compile project(':chat-message-adapter')
+    implementation 'io.reactivex:rxandroid:1.1.0'
+    implementation project(':chat-message-adapter')
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+
+    implementation "com.google.android.exoplayer:exoplayer:2.11.8"
+
 }
