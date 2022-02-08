@@ -1,14 +1,13 @@
 package com.quickblox.ui.kit.chatmessage.adapter.media.view;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
 import android.widget.ProgressBar;
 
-import com.google.android.exoplayer2.ui.DefaultTimeBar;
+import androidx.annotation.Nullable;
+
 import com.google.android.exoplayer2.ui.TimeBar;
+
 
 /**
  * Created by roman on 8/4/17.
@@ -26,14 +25,20 @@ public class TimeProgressBar extends ProgressBar implements TimeBar {
 
 
     @Override
-    public void setEnabled(boolean enabled) {
+    public void addListener(OnScrubListener listener) {
 
     }
 
     @Override
-    public void setListener(OnScrubListener listener) {
+    public void removeListener(OnScrubListener listener) {
 
     }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+
+    }
+
 
     @Override
     public void setKeyTimeIncrement(long time) {
@@ -59,6 +64,11 @@ public class TimeProgressBar extends ProgressBar implements TimeBar {
     public void setDuration(long duration) {
         this.duration = duration;
         updateProgress();
+    }
+
+    @Override
+    public long getPreferredUpdateDelay() {
+        return 0;
     }
 
     @Override

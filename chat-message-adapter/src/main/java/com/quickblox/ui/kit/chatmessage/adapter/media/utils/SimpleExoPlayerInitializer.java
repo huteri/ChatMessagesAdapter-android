@@ -3,14 +3,11 @@ package com.quickblox.ui.kit.chatmessage.adapter.media.utils;
 import android.content.Context;
 import android.net.Uri;
 
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.quickblox.ui.kit.chatmessage.adapter.R;
@@ -22,9 +19,7 @@ import com.quickblox.ui.kit.chatmessage.adapter.R;
 public class SimpleExoPlayerInitializer {
 
     public static SimpleExoPlayer initializeExoPlayer(Context context) {
-        return ExoPlayerFactory.newSimpleInstance(
-                new DefaultRenderersFactory(context),
-                new DefaultTrackSelector(), new DefaultLoadControl());
+        return ExoPlayerFactory.newSimpleInstance(context);
     }
 
     public static MediaSource buildMediaSource(Uri uri, Context context) {

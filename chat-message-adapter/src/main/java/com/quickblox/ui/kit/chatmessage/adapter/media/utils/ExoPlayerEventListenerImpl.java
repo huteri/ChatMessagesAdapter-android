@@ -12,10 +12,6 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
  */
 
 public class ExoPlayerEventListenerImpl implements Player.EventListener {
-    @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest) {
-
-    }
 
     @Override
     public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
@@ -39,11 +35,6 @@ public class ExoPlayerEventListenerImpl implements Player.EventListener {
 
     @Override
     public void onPlayerError(ExoPlaybackException error) {
-
-    }
-
-    @Override
-    public void onPositionDiscontinuity() {
 
     }
 

@@ -2,16 +2,12 @@ package com.quickblox.ui.kit.chatmessage.adapter.utils;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.v4.util.Pair;
+import androidx.core.util.Pair;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.quickblox.ui.kit.chatmessage.adapter.R;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
