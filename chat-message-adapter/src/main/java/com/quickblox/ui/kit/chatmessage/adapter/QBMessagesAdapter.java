@@ -2,6 +2,7 @@ package com.quickblox.ui.kit.chatmessage.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -20,7 +21,8 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.quickblox.chat.QBChatService;
@@ -37,7 +39,6 @@ import com.quickblox.ui.kit.chatmessage.adapter.media.AudioController;
 import com.quickblox.ui.kit.chatmessage.adapter.media.MediaController;
 import com.quickblox.ui.kit.chatmessage.adapter.media.SingleMediaManager;
 import com.quickblox.ui.kit.chatmessage.adapter.media.utils.Utils;
-import com.quickblox.ui.kit.chatmessage.adapter.media.video.thumbnails.VideoThumbnail;
 import com.quickblox.ui.kit.chatmessage.adapter.media.view.QBPlaybackControlView;
 import com.quickblox.ui.kit.chatmessage.adapter.models.QBLinkPreview;
 import com.quickblox.ui.kit.chatmessage.adapter.utils.AnimationsUtils;
@@ -245,7 +246,7 @@ public class QBMessagesAdapter<T extends QBChatMessage> extends RecyclerView.Ada
 
         //abort loading avatar before setting new avatar to view
         if (containerLayoutRes.get(holder.getItemViewType()) != 0) {
-            Glide.clear(holder.avatar);
+            Glide.with(context).clear(holder.avatar);
         }
 
         super.onViewRecycled(holder);
@@ -478,15 +479,16 @@ public class QBMessagesAdapter<T extends QBChatMessage> extends RecyclerView.Ada
 
         Glide.with(context)
                 .load(imageUrl)
-                .listener(new RequestListener<String, GlideDrawable>() {
+                .listener(new RequestListener<Drawable>() {
                     @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         AnimationsUtils.showView(imageView, SHOW_VIEW_ANIMATION_DURATION);
+
                         return false;
                     }
                 })
@@ -715,13 +717,12 @@ public class QBMessagesAdapter<T extends QBChatMessage> extends RecyclerView.Ada
         int preferredImageWidth = (int) context.getResources().getDimension(R.dimen.attach_image_width_preview);
         int preferredImageHeight = (int) context.getResources().getDimension(R.dimen.attach_image_height_preview);
 
-        VideoThumbnail model = new VideoThumbnail(url);
         Glide.with(context)
-                .load(model)
-                .listener(this.<VideoThumbnail, GlideDrawable>getVideoThumbnailRequestListener(holder, position))
+                .load(url)
                 .override(preferredImageWidth, preferredImageHeight)
                 .dontTransform()
                 .error(R.drawable.ic_error)
+                .listener(this.<Drawable>getVideoThumbnailRequestListener(holder, position))
                 .into(((VideoAttachHolder) holder).attachImageView);
     }
 
@@ -778,10 +779,10 @@ public class QBMessagesAdapter<T extends QBChatMessage> extends RecyclerView.Ada
 
         Glide.with(context)
                 .load(url)
-                .listener(this.<String, GlideDrawable>getRequestListener(holder, position))
                 .override(preferredImageWidth, preferredImageHeight)
                 .dontTransform()
                 .error(R.drawable.ic_error)
+                .listener(this.<Drawable>getRequestListener(holder, position))
                 .into(((BaseImageAttachHolder) holder).attachImageView);
     }
 
@@ -893,7 +894,7 @@ public class QBMessagesAdapter<T extends QBChatMessage> extends RecyclerView.Ada
         }
     }
 
-    protected static class ImageLoadListener<M, P> implements RequestListener<M, P> {
+    protected static class ImageLoadListener<P> implements RequestListener<P> {
         private BaseImageAttachHolder holder;
 
         protected ImageLoadListener(BaseImageAttachHolder holder) {
@@ -902,22 +903,21 @@ public class QBMessagesAdapter<T extends QBChatMessage> extends RecyclerView.Ada
         }
 
         @Override
-        public boolean onException(Exception e, M model, Target<P> target, boolean isFirstResource) {
-            Log.e(TAG, "ImageLoadListener Exception= " + e);
+        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<P> target, boolean isFirstResource) {
             holder.attachImageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             holder.attachmentProgressBar.setVisibility(View.GONE);
             return false;
         }
 
         @Override
-        public boolean onResourceReady(P resource, M model, Target<P> target, boolean isFromMemoryCache, boolean isFirstResource) {
+        public boolean onResourceReady(P resource, Object model, Target<P> target, DataSource dataSource, boolean isFirstResource) {
             holder.attachImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             holder.attachmentProgressBar.setVisibility(View.GONE);
             return false;
         }
     }
 
-    protected static class VideoThumbnailLoadListener extends ImageLoadListener<VideoThumbnail, GlideDrawable> {
+    protected static class VideoThumbnailLoadListener extends ImageLoadListener<Drawable> {
         private VideoAttachHolder holder;
 
         protected VideoThumbnailLoadListener(VideoAttachHolder holder) {
@@ -927,10 +927,10 @@ public class QBMessagesAdapter<T extends QBChatMessage> extends RecyclerView.Ada
         }
 
         @Override
-        public boolean onResourceReady(GlideDrawable resource, VideoThumbnail model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-            super.onResourceReady(resource, model, target, isFromMemoryCache, isFirstResource);
+        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
             holder.playIcon.setVisibility(View.VISIBLE);
-            return false;
+
+            return super.onResourceReady(resource, model, target, dataSource, isFirstResource);
         }
     }
 
